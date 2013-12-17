@@ -48,39 +48,37 @@ You work for a company that maintains user's address book on their server like G
 For 2-way address book syncing, we can assume that a single person will be responsible for entering his own data. This ensures there is no conflict between two different data. Only the latest data entered/edited by the user is the correct data. All previous data is stale.
 
 ###Server Methods:
-AddressBook.setContact() enters new Contact instance for given User into AddressBook after checking lateshHash() and then calls syncServerContact() on all devices based on Device.getRevisionHash().
+__AddressBook.setContact()__ enters new Contact instance for given User into AddressBook after checking _lateshHash()_ and then calls _syncServerContact()_ on all devices based on _Device.getRevisionHash()_.
 
-AddressBook.getContact() returns Contact stored in AddressBook for given User.
+__AddressBook.getContact()__ returns Contact stored in AddressBook for given User.
 
-AddressBook.removeContact()deletes Contact stored in AddressBook for given User and calls syncServerContact to delete the contacts on all devices. 
+__AddressBook.removeContact()__ deletes Contact stored in AddressBook for given User and calls _syncServerContact()_ to delete the contacts on all devices. 
 
-User.getUserContact() calls AddressBook.getContact with the User id.
+__User.getUserContact()__ calls _AddressBook.getContact()_ with the User id.
 
-User.setUserContact() calls AddressBook.setContact() with User id.
+__User.setUserContact()__ calls _AddressBook.setContact()_ with User id.
 
-User.getDeviceList() returns list of devices registered with current User.
+__User.getDeviceList()__ returns list of devices registered with current User.
 
-User.setDeviceList() registers new device for given User and calls syncServerContact() to that device after checking Device.getRevisionHash().
+__User.setDeviceList()__ registers new device for given User and calls _syncServerContact()_ to that device after checking _Device.getRevisionHash()_.
 
-Device.getRevisionHash() returns the revisionHash a device is using based on latest records.
+__Device.getRevisionHash()__ returns the revisionHash a device is using based on latest records.
 
-Device.setRevisionHash() updates revisionHash of device when syncServerContact returns success and when a device pushes 
+__Device.setRevisionHash()__ updates revisionHash of device when _syncServerContact()_ returns success and when a device pushes Contact instance to server. 
 
-Contact.getRevisionHash() returns revisionHash of Contact instance.  
+__Contact.getRevisionHash()__ returns revisionHash of Contact instance.  
 
-Contact.create() creates a new Contact instance and sets Contact revisionHash and calls User.setUserContact().
+__Contact.create()__ creates a new Contact instance and sets Contact revisionHash and calls _User.setUserContact()_.
 
-Contact.edit() changes data in the instance and updates revisionHash and calls User.setUserContact().
+__Contact.edit()__ changes data in the instance and updates revisionHash and calls _User.setUserContact()_.
 
-Contact.delete() delete Contact instance and calls User.removeUserContact().
+__Contact.delete()__ delete Contact instance and calls _User.removeUserContact()_.
 
-HashUtility.latestHash() compares two Hash values and returns the one with latest timestamp.
+__HashUtility.latestHash()__ compares two Hash values and returns the one with latest timestamp.
 
-HashUtility.createHash() create Hash value for a Contact.
+__HashUtility.createHash()__ create Hash value for a Contact.
 
-SyncUtility.syncServerContact() pushes Contact to the given device id. If push returns success, it updates the 
-
-Device.setRevisionHash() to show the revision of the Contact that was pushed to the device. If push returns connection success, but lateshHash() failure, it ends else if it returns connection failure, it sets a event dispatcher to syncServerContact() on device connection.
+__SyncUtility.syncServerContact()__ pushes Contact to the given device id. If push returns success, it updates the _Device.setRevisionHash()_ to show the revision of the Contact that was pushed to the device. If push returns connection success, but _lateshHash()_ failure, it ends else if it returns connection failure, it sets a event dispatcher to _syncServerContact()_ on device connection.
 
 ###Client Methods:
-SyncUtility.syncClientContact() pushes Contact to server. In server, on latestHash() if it is found that this is latest revision, server updates it's own records and pushes syncServerContact to all remaining devices.
+__SyncUtility.syncClientContact()__ pushes Contact to server. In server, on _latestHash()_ if it is found that this is latest revision, server updates it's own records and pushes _syncServerContact()_ to all remaining devices.
